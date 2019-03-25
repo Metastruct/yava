@@ -417,28 +417,25 @@ if CLIENT then
         yava._stale_chunk_set = {}
     end)
 
-    hook.Add("PreRender","yava_light",function()
-        -- TODO proper light direction
-        render.SuppressEngineLighting(true) 
+
+	-- TODO: disable in skybox, etc
+    hook.Add("PostDrawOpaqueRenderables","yava_render",function()
+        
+        if not yava._vmatrix then return end
+        
+        
+	render.SuppressEngineLighting(true) 
+    	render.SetLightingOrigin( Vector(0,0,0) )
+	render.ResetModelLighting( 0,0,0 )
+	render.SetColorModulation( 0,0,0 )
+	render.SetBlend( 1 )
+			
         render.SetModelLighting(BOX_TOP,    1,1,1 )
         render.SetModelLighting(BOX_FRONT,  .8,.8,.8 )
         render.SetModelLighting(BOX_RIGHT,  .6,.6,.6 )
         render.SetModelLighting(BOX_LEFT,   .5,.5,.5 )
         render.SetModelLighting(BOX_BACK,   .3,.3,.3 )
         render.SetModelLighting(BOX_BOTTOM, .1,.1,.1 )
-    end)
-
-    hook.Add("PostDrawOpaqueRenderables","yava_render",function()
-        
-        if not yava._vmatrix then return end
-        
-        --[[render.SuppressEngineLighting(true) 
-        render.SetModelLighting(BOX_TOP,    1,1,1 )
-        render.SetModelLighting(BOX_FRONT,  .8,.8,.8 )
-        render.SetModelLighting(BOX_RIGHT,  .6,.6,.6 )
-        render.SetModelLighting(BOX_LEFT,   .5,.5,.5 )
-        render.SetModelLighting(BOX_BACK,   .3,.3,.3 )
-        render.SetModelLighting(BOX_BOTTOM, .1,.1,.1 )]]
         
         if yava._atlas then
             render.SetMaterial( yava._atlas )
@@ -452,7 +449,7 @@ if CLIENT then
         end
         cam.PopModelMatrix()
 
-        --render.SuppressEngineLighting(false) 
+        render.SuppressEngineLighting(false) 
     end)
 
     local rx_chunk_count = 0
