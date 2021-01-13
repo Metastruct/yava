@@ -43,6 +43,8 @@ yava.addBlockType("sand")
 yava.init{
     imageDir = "yava_test",
     saveDir = "testbed",
+    basePos = Vector(1,1,1)*-8192,
+    blockScale = 18,
     generator = function(x,y,z)
             return "void"
     end
@@ -56,6 +58,11 @@ if SERVER then
     hook.Add("ShutDown","yava_autosave",function()
         yava.save()
     end)
+    
+    function _G.minecraft(pos,set)
+        local x,y,z = yava.worldPosToBlockCoords(pos)
+        yava.setBlock(x,y,z,set==nil and "rock" or set==false and "void" or set or "void")
+    end
 
     concommand.Add("yava_reload", function(ply,cmd,args)
         if ply:IsAdmin() then
