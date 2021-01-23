@@ -71,3 +71,31 @@ end
 function ENT:Draw()
     -- should never be called
 end
+
+-- Very buggy, all blocks are destroyable also
+function ENT:OnTakeDamage( dmg )
+	if not yava.disableDamage then return end
+	local att = dmg:GetAttacker()
+	local infl = dmg:GetInflictor()
+	if not att:IsPlayer() then
+		return
+	end
+	if not infl:IsWeapon() and not infl:IsPlayer() then
+		--return -- weird bugs on some weapons
+	end
+	
+	-- maybe recoverable somehow?
+	local dpos = dmg:GetDamagePosition()
+	if dpos:LengthSqr()<10 then return end
+	
+	local dforce = dmg:GetDamageForce()
+	
+	if dmg:IsExplosionDamage() then
+		local x,y,z = yava.worldPosToBlockCoords(dpos)
+		yava.setSphere(x,y,z,4,"void")
+	else
+		if dforce:LengthSqr()<10 then return end
+		dforce:Normalize()
+		minecraft(dpos+dforce*5,false)
+	end
+end
