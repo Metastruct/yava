@@ -74,7 +74,7 @@ end
 
 -- Very buggy, all blocks are destroyable also
 function ENT:OnTakeDamage( dmg )
-	if not yava.disableDamage then return end
+	if yava.disableDamage then return end
 	local att = dmg:GetAttacker()
 	local infl = dmg:GetInflictor()
 	if not att:IsPlayer() then
